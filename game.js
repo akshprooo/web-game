@@ -1,5 +1,14 @@
 // Simple 'Dodge Blocks' game (enhanced UI)
 const canvas = document.getElementById('game');
+
+const playerImg = new Image();
+playerImg.src = 'assets/player.png';
+
+const enemyImgs = [
+  Object.assign(new Image(), { src: 'assets/enemy1.png' }),
+  Object.assign(new Image(), { src: 'assets/enemy2.png' }),
+];
+
 const ctx = canvas.getContext('2d');
 const scoreEl = document.getElementById('score');
 const bestEl = document.getElementById('best');
@@ -202,7 +211,13 @@ function fitCanvas(){
 fitCanvas();
 
 // Player (slightly larger for better visibility)
-const player = {x: W/2 - 28, y: H - 70, w: 56, h: 22, speed: 6};
+const player = {
+  x: W / 2 - 28,
+  y: H - 90,
+  w: 70,
+  h: 70,
+  speed: 6
+};
 
 // Blocks
 let blocks = [];
@@ -249,9 +264,11 @@ function drawBg(){
 }
 
 function spawnBlock(){
-  const bw = 20 + Math.random()*60;
+  const bw = 60;
+  const bh = 120;
   const bx = Math.random() * (W - bw);
-  blocks.push({x:bx,y:-20,w:bw,h:18,vy:gravity});
+  const img = enemyImgs[Math.floor(Math.random() * enemyImgs.length)];
+  blocks.push({x: bx, y: -bh, w: bw, h: bh, vy: gravity, img});
 }
 
 function update(){
@@ -317,10 +334,8 @@ function draw(){
   // player
   // player neon (bigger + stronger glow)
   ctx.save();
-  ctx.shadowColor = 'rgba(16,185,129,0.98)';
-  ctx.shadowBlur = 28;
-  ctx.fillStyle = '#10b981';
-  roundRect(ctx, player.x, player.y, player.w, player.h, 6, true);
+  ctx.shadowBlur = 25;
+  ctx.drawImage(playerImg, player.x, player.y, player.w, player.h);
   ctx.restore();
 
   // spotlight over player
@@ -331,13 +346,11 @@ function draw(){
 
   // blocks with neon glow
   for(const b of blocks){
-    ctx.save();
-    ctx.shadowColor = 'rgba(239,68,68,0.85)';
-    ctx.shadowBlur = 14;
-    ctx.fillStyle = '#ef4444';
-    roundRect(ctx,b.x,b.y,b.w,b.h,3,true);
-    ctx.restore();
-  }
+  ctx.save();
+  ctx.shadowBlur = 18;
+  ctx.drawImage(b.img, b.x, b.y, b.w, b.h);
+  ctx.restore();
+}
 
   // particles
   for(let i=particles.length-1;i>=0;i--){
