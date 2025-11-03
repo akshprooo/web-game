@@ -1,4 +1,3 @@
-// Simple 'Dodge Blocks' game (enhanced UI)
 const canvas = document.getElementById('game');
 
 const playerImg = new Image();
